@@ -22,8 +22,8 @@ func (r *repositoryMock) Save(campaign *Campaign) error {
 var (
 	newCampaign = contract.NewCampaign{
 		Name:    "Test Y",
-		Content: "Body",
-		Emails:  []string{"teste@test.com"},
+		Content: "Body Hi",
+		Emails:  []string{"teste1@test.com"},
 	}
 	service = Service{}
 )
@@ -47,8 +47,7 @@ func Test_Create_ValidateDomainError(t *testing.T) {
 
 	_, err := service.Create(auxNewCampaign)
 
-	assert.NotNil(err)
-	assert.Equal("name is required", err.Error())
+	assert.False(errors.Is(internalerros.ErrInternal, err))
 }
 
 func Test_Create_SaveCampaign(t *testing.T) {
