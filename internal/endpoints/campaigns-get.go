@@ -1,13 +1,22 @@
 package endpoints
 
 import (
+	internalerros "email-service-go/internal/internal-erros"
+	"errors"
 	"net/http"
-
-	"github.com/go-chi/render"
 )
 
-func (h *Handler) CampaignGet(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CampaignGet(w http.ResponseWriter, r *http.Request) (interface{}, int, error) {
 
-	render.Status(r, 201)
-	render.JSON(w, r, h.CampaignService.Repository.Get())
+	campaigns, err := h.CampaignService.Repository.Get()
+
+	if err != nil {
+		if errors.Is(err, internalerros.ErrInternal) {
+			return nil, 500, err
+		} else {
+			return nil, 400, err
+		}
+	}
+
+	return campaigns, 200, nil
 }
